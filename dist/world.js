@@ -15,20 +15,20 @@ box(10,4.4,.22,-3,2.1,-6.5,cream);box(4,4.4,.22,6,2.1,-6.5,cream);box(2,1.4,.22,
 box(.12,1.2,13,-7.85,.6,0,teal);box(.12,1.2,13,7.85,.6,0,teal);box(10,1.2,.13,-3,.6,-6.35,teal);box(4,1.2,.13,6,.6,-6.35,teal);
 box(2.2,.16,.34,3,2.95,-6.45,wood);for(const x of [1.93,4.07])box(.16,3,.34,x,1.45,-6.45,wood);
 sign('QUIET ROOM',2.1,.48,3,3.5,-6.32);
-box(5.8,.2,4.8,3,-.1,-9,0xaaa28f);box(.18,3.6,4.8,.1,1.7,-9,cream);box(.18,3.6,4.8,5.9,1.7,-9,cream);box(5.8,3.6,.18,3,1.7,-11.4,cream);
-box(2.6,.28,.8,3,.55,-10.7,blue);for(const x of [2,4])box(.12,.5,.6,x,.2,-10.7,wood);box(2.6,.8,.14,3,1,-11.04,blue);
-sign('PLEASE WAIT HERE',2.5,.5,3,2.35,-11.28);
+box(7,.2,7,3,-.1,-10,0xaaa28f);box(.18,4.4,7,-.5,2.2,-10,cream);box(.18,4.4,7,6.5,2.2,-10,cream);box(7,4.4,.18,3,2.2,-13.5,cream);
+box(2.6,.28,.8,3,.55,-12.7,blue);for(const x of [2,4])box(.12,.5,.6,x,.2,-12.7,wood);box(2.6,.8,.14,3,1,-13.04,blue);
+sign('PLEASE WAIT HERE',2.5,.5,3,2.35,-13.38);
 // A physical tabletop toy occupies the wait without introducing a screen.
-box(2.7,.16,2.7,3,.84,-8.65,wood);for(const x of [1.9,4.1])for(const z of [-9.75,-7.55])box(.12,.8,.12,x,.4,z,wood);
+box(2.7,.16,2.7,3,.84,-10.15,wood);for(const x of [1.9,4.1])for(const z of [-11.25,-9.05])box(.12,.8,.12,x,.4,z,wood);
 const mazeRows=['#######','#.#...#','#.#.#.#','#...#.#','#####.#','#.....#','#######'];
-const mazeOrigin={x:1.92,z:-9.73},cell=.36;box(2.55,.04,2.55,3,.94,-8.65,cream);
+const mazeOrigin={x:1.92,z:-11.23},cell=.36;box(2.55,.04,2.55,3,.94,-10.15,cream);
 for(let row=0;row<7;row++)for(let col=0;col<7;col++)if(mazeRows[row][col]==='#')box(.34,.16,.34,mazeOrigin.x+col*cell,1.03,mazeOrigin.z+row*cell,teal);
 const goal=cylinder(.13,.018,mazeOrigin.x+5*cell,.975,mazeOrigin.z+5*cell,0x509052);
 const marble=sphere(.105,mazeOrigin.x+cell,1.07,mazeOrigin.z+cell,yellow);let marbleCell=[1,1],moves=0,won=false;
 // Reading nook, low bookshelf, cushions, and a wooden shape sorter.
-box(.6,.8,2.2,.55,.4,-9.7,wood);for(let i=0;i<7;i++)box(.43,.47,.15,.57,.65,-10.5+i*.25,[blue,red,yellow,teal][i%4]);
-box(1.1,.05,1.2,4.9,.04,-8,teal);sphere(.43,4.9,.28,-8.2,red).scale.y=.55;
-box(.65,.45,.65,4.85,.27,-10.6,wood);cylinder(.12,.08,4.7,.54,-10.6,blue);box(.2,.08,.2,5,.54,-10.6,red);
+box(.6,.8,2.2,0,.4,-11.3,wood);for(let i=0;i<7;i++)box(.43,.47,.15,.02,.65,-12.1+i*.25,[blue,red,yellow,teal][i%4]);
+box(1.1,.05,1.2,5.5,.04,-10.4,teal);sphere(.43,5.5,.28,-10.6,red).scale.y=.55;
+box(.65,.45,.65,5.5,.27,-12.6,wood);cylinder(.12,.08,5.35,.54,-12.6,blue);box(.2,.08,.2,5.65,.54,-12.6,red);
 sign('DISCOVERY CENTER',6.8,.85,-2.5,3.55,-6.32);
 // Reception desk and cubby shelves.
 box(3.6,1.25,1.3,-5.4,.65,3.5,teal);box(3.85,.15,1.55,-5.4,1.34,3.5,wood);sign('WELCOME, FRIEND!',2.8,.46,-5.4,.8,4.16);
@@ -57,8 +57,8 @@ const remove=[];scene.traverse(o=>{if(o.isMesh&&o.geometry.type==='BoxGeometry'&
 box(44,.28,34,0,-.32,-9.5,0xa09b87);
 box(6,.04,20,-8.7,-.05,-3.5,0xbcb69c);box(6,.04,20,8.7,-.05,-3.5,0xbcb69c);box(44,.04,3,0,-.05,-12,0xbcb69c);
 // Low cutaway partitions reveal the many rooms; openings are actual gaps.
-function wallX(x,z1,z2,door){const h=1.9;if(door===undefined){box(.18,h,z2-z1,x,h/2,z1+(z2-z1)/2,cream);return;}if(door-1.1>z1)box(.18,h,door-1.1-z1,x,h/2,(z1+door-1.1)/2,cream);if(door+1.1<z2)box(.18,h,z2-door-1.1,x,h/2,(z2+door+1.1)/2,cream);}
-function wallZ(z,x1,x2){box(x2-x1,1.9,.18,(x1+x2)/2,.95,z,cream);}
+function wallX(x,z1,z2,door){const h=4.4;if(door===undefined){box(.18,h,z2-z1,x,h/2,z1+(z2-z1)/2,cream);return;}if(door-1.1>z1)box(.18,h,door-1.1-z1,x,h/2,(z1+door-1.1)/2,cream);if(door+1.1<z2)box(.18,h,z2-door-1.1,x,h/2,(z2+door+1.1)/2,cream);box(.18,1.5,2.2,x,3.65,door,cream);}
+function wallZ(z,x1,x2){box(x2-x1,4.4,.18,(x1+x2)/2,2.2,z,cream);}
 const rooms=[];
 function room(name,x,z,w,d,type,color){box(w-.12,.04,d-.12,x,-.02,z,color);wallX(x-w/2,z-d/2,z+d/2,x>0?z:undefined);wallX(x+w/2,z-d/2,z+d/2,x<0?z:undefined);wallZ(z-d/2,x-w/2,x+w/2);wallZ(z+d/2,x-w/2,x+w/2);const label=sign(name,w*.8,.8,x,.09,z+d/2-1);label.rotation.x=-Math.PI/2;rooms.push({name,x,z,w,d,type});return rooms[rooms.length-1];}
 room('ART STUDIO',-16.5,1,11,11,'art',0xd8baa1);room('READING ROOM',-16.5,-10,11,11,'library',0xc4c8a4);room('MUSIC ROOM',-16.5,-21,11,11,'music',0xb4bdcb);
@@ -66,7 +66,7 @@ room('CAFETERIA',16.5,1,11,11,'cafe',0xd1c4a8);room('CLASSROOM',16.5,-10,11,11,'
 // Rear wing, reached along the long cross corridor.
 for(const [name,x,type,color] of [['COSTUME ROOM',-7.5,'costume',0xcbbbc7],['NAP ROOM',-2.5,'nap',0xb3bdca],['STAFF ROOM',2.5,'staff',0xc4c0aa],['STORAGE',7.5,'storage',0xb8af9e]]){const r=room(name,x,-20.5,5,12,type,color); }
 // Replace front partitions of rear rooms with real doors to the cross corridor.
-const frontWalls=scene.children.filter(o=>o.isMesh&&o.geometry.type==='BoxGeometry'&&o.position.z===-14.5&&o.geometry.parameters.width===5);frontWalls.forEach(o=>{const x=o.position.x;scene.remove(o);box(1.4,1.9,.18,x-1.8,.95,-14.5,cream);box(1.4,1.9,.18,x+1.8,.95,-14.5,cream);});
+const frontWalls=scene.children.filter(o=>o.isMesh&&o.geometry.type==='BoxGeometry'&&o.position.z===-14.5&&o.geometry.parameters.width===5);frontWalls.forEach(o=>{const x=o.position.x;scene.remove(o);box(1.4,4.4,.18,x-1.8,2.2,-14.5,cream);box(1.4,4.4,.18,x+1.8,2.2,-14.5,cream);box(2.2,1.5,.18,x,3.65,-14.5,cream);});
 // Side corridors continue around the original quiet room to the back wing.
 box(2.3,.04,5, -9.7,-.03,-8,0xbcb69c);box(2.3,.04,5,9.7,-.03,-8,0xbcb69c);
 function table(x,z,c=wood){box(2,.14,1.1,x,.83,z,c);for(const dx of [-.8,.8])for(const dz of [-.4,.4])box(.09,.8,.09,x+dx,.4,z+dz,wood);}
@@ -82,9 +82,16 @@ for(const r of rooms){const {x,z,w,d,type}=r;
 }
 // Restrooms and a small maintenance room complete the service wing.
 room('RESTROOMS',-4.5,-8.7,6,4,'bath',0xbac9c7);for(let i=0;i<3;i++){box(.12,1.5,1.8,-6.7+i*1.4,.75,-9,cream);cylinder(.23,.45,-6+i*1.4,.25,-9.4,cream);}
-room('MAINTENANCE',7,-8.7,2,4,'utility',0xb9b5a5);box(1.2,1.7,.4,7,.85,-10.1,0x697b7c);
+room('MAINTENANCE',7.7,-8.7,1.8,4,'utility',0xb9b5a5);box(1.2,1.7,.4,7.7,.85,-10.1,0x697b7c);
 // Broad wall openings connect the main hall to both side wings.
 for(const x of [-8,8]){wallX(x,-6.5,6.5,1);}
+// Continuous ceilings and exterior perimeter, replacing the architectural cutaway.
+box(44,.24,33,0,4.52,-10,0xbdbba9);wallZ(-26.5,-22,22);
+for(const x of [-22,22])wallX(x,-26.5,6.5);
+const ceilingGlow=new THREE.MeshStandardMaterial({color:0xe7e4ce,emissive:0xffedc2,emissiveIntensity:.75,roughness:1});
+for(const x of [-16,-8,0,8,16])for(const z of [-22,-16,-10,-4,2]){const fixture=new THREE.Mesh(new THREE.BoxGeometry(1.6,.06,.45),ceilingGlow);fixture.position.set(x,4.36,z);scene.add(fixture);}
+const quietLight=new THREE.PointLight(0xffe5b3,13,11,2);quietLight.position.set(3,3.6,-9.7);scene.add(quietLight);
+const hallLight=new THREE.PointLight(0xffefce,18,16,2);hallLight.position.set(0,3.7,.5);scene.add(hallLight);
 // Outdoor enclosure: attached directly to the front of the existing center.
 const concrete=0x777970,stain=0x535e52,iron=0x3d4845;
 box(30,.25,25,0,-.2,19,0x6f746c);
