@@ -110,26 +110,48 @@ const yardGateHinge=new THREE.Group();yardGateHinge.position.set(-2,0,31.2);scen
 for(let x=.12;x<4;x+=.23)box(.055,3.3,.09,x,1.65,0,iron,yardGateHinge);for(const y of [.12,1.6,3.25])box(4,.08,.12,2,y,0,iron,yardGateHinge);
 box(.12,3.35,.16,2,1.67,-.08,iron,yardGateHinge);box(.3,.36,.13,2.18,1.35,-.19,0x9c8353,yardGateHinge);const shackle=new THREE.Mesh(new THREE.TorusGeometry(.12,.028,8,16,Math.PI),mat(iron));shackle.position.set(2.18,1.57,-.19);yardGateHinge.add(shackle);
 box(.2,3.5,3,-2,1.75,33,concrete);box(.2,3.5,3,2,1.75,33,concrete);box(4,.2,3,0,3.5,33,concrete);
-// A buried holding room sits behind the service passage.
+// Beyond the outer gate: a long, roofed intake corridor flanked by locked specimen tubes.
 const rust=0x57483b,oxide=0x76503a,pipeColor=0x383e3a;
-box(24,.2,22,0,-.12,48,0x393a35);box(.25,7,22,-12,3.5,48,rust);box(.25,7,22,12,3.5,48,rust);box(10,7,.25,-7,3.5,59,rust);box(10,7,.25,7,3.5,59,rust);box(4,1.5,.25,0,6.25,59,rust);
-box(10,7,.25,-7,3.5,37,rust);box(10,7,.25,7,3.5,37,rust);box(4,1.2,.25,0,6.4,37,rust);box(24,.25,22,0,7.1,48,0x252825);
+const prisonStart=37,prisonEnd=107,prisonLength=prisonEnd-prisonStart,prisonCenter=(prisonStart+prisonEnd)/2;
+box(24,.24,prisonLength,0,-.12,prisonCenter,0x302f2b);
+box(.3,7.2,prisonLength,-12,3.6,prisonCenter,rust);box(.3,7.2,prisonLength,12,3.6,prisonCenter,rust);box(24,.28,prisonLength,0,7.2,prisonCenter,0x20221f);
+// The entrance and far bulkhead have one narrow central opening.
+box(10,7,.3,-7,3.5,prisonStart,rust);box(10,7,.3,7,3.5,prisonStart,rust);box(4,1.3,.3,0,6.35,prisonStart,rust);
+box(9,7,.3,-7.5,3.5,prisonEnd,rust);box(9,7,.3,7.5,3.5,prisonEnd,rust);box(6,1.3,.3,0,6.35,prisonEnd,rust);
 let rustSeed=64021;function rustRand(){rustSeed=(rustSeed*1664525+1013904223)>>>0;return rustSeed/4294967296;}
-for(let i=0;i<38;i++){const x=-11+rustRand()*22,y=.5+rustRand()*5.7,w=.18+rustRand()*1.2,h=.25+rustRand()*1.5;box(w,h,.018,x,y,58.86,[0x493a31,0x684a36,0x373b36][i%3]);}
-// Corroded service pipes and drain grates frame the room; no windows or other exits.
-for(const x of [-10,-6,6,10]){const p=new THREE.Mesh(new THREE.CylinderGeometry(.11,.11,21,10),mat(pipeColor));p.rotation.x=Math.PI/2;p.position.set(x,6.55,48);scene.add(p);for(const z of [40,48,56])box(.38,.38,.38,x,6.55,z,oxide);}
-for(let i=0;i<5;i++)box(2.2,.025,.05,-2+i,0,46,0x676057);
-// Three sealed observation tubes, each with a welded hatch and a heavy padlock.
-for(const x of [-7,0,7]){const shell=new THREE.Mesh(new THREE.CylinderGeometry(1.62,1.72,6.4,24,1,true),new THREE.MeshStandardMaterial({color:0x4a554f,roughness:1,metalness:.25,side:THREE.DoubleSide}));shell.position.set(x,3.2,48);scene.add(shell);for(const y of [.18,1.05,5.4,6.2]){const ring=new THREE.Mesh(new THREE.TorusGeometry(1.68,.11,8,24),mat(oxide));ring.rotation.x=Math.PI/2;ring.position.set(x,y,48);scene.add(ring);}cylinder(1.67,.18,x,.08,48,pipeColor);cylinder(1.58,.18,x,6.34,48,oxide);box(.92,2.35,.08,x,.95,46.34,oxide);box(1.05,.12,.12,x,2.18,46.28,0x272a27);for(const dx of [-.28,0,.28])box(.045,1.15,.045,x+dx,1.03,46.23,pipeColor);box(.2,.4,.16,x+.48,1.25,46.25,0x302e29);const lock=new THREE.Mesh(new THREE.TorusGeometry(.11,.035,8,14,Math.PI),mat(0x9a7441));lock.position.set(x+.48,1.49,46.24);scene.add(lock);for(const z of [47.7,48.3])box(.06,2,.06,x+1.3,1.1,z,oxide);}
-// The only working fixture hangs above the central tube.
-box(.6,.12,.6,0,6.82,49,0x262824);box(.18,.5,.18,0,6.5,49,oxide);const prisonBulb=sphere(.16,0,6.22,49,0xe6bd78);prisonBulb.material.emissive.setHex(0x6e4319);const prisonLight=new THREE.PointLight(0xffd59a,0,16,2);prisonLight.position.set(0,6.15,49);scene.add(prisonLight);
-// A second specimen lab lies beyond the holding room. The middle tube can shelter the player.
-box(24,.2,30,0,-.12,74,0x343732);box(.25,7,30,-12,3.5,74,rust);box(.25,7,30,12,3.5,74,rust);box(24,7,.25,0,3.5,89,rust);box(24,.25,30,0,7.1,74,0x252825);
-sign('SPECIMEN LAB  /  B',5,.45,0,2.5,88.82,'#4a4136','#d1b67c');
+function prisonDetail(mesh){mesh.userData.noPlayerCollision=true;return mesh;}
+// Eight enormous vertical holding tubes run down each wall, all visibly sealed.
+let tubeNumber=0;
+for(const z of [43,51,59,67,75,83,91,99])for(const side of [-1,1]){
+ const x=side*8.65, glass=new THREE.Mesh(new THREE.CylinderGeometry(1.98,2.08,6.45,32,1,true),new THREE.MeshStandardMaterial({color:side<0?0x46504b:0x4a514b,roughness:.78,metalness:.2,side:THREE.DoubleSide,transparent:true,opacity:.22,depthWrite:false}));
+ glass.position.set(x,3.28,z);scene.add(prisonDetail(glass));
+ for(const y of [.18,.5,1.08,5.45,6.18,6.38]){const ring=new THREE.Mesh(new THREE.TorusGeometry(y===.18||y===6.38?2.02:1.99,.1,8,32),mat(y===.5||y===6.18?oxide:pipeColor));ring.rotation.x=Math.PI/2;ring.position.set(x,y,z);scene.add(prisonDetail(ring));}
+ prisonDetail(cylinder(1.99,.18,x,.1,z,pipeColor));prisonDetail(cylinder(1.91,.15,x,6.43,z,oxide));
+ // Reinforced hatch, bars, and a lock face the center aisle.
+ const faceX=x-side*1.94;prisonDetail(box(.12,2.45,.98,faceX,1.55,z,oxide));
+ prisonDetail(box(.16,.14,1.05,faceX,2.82,z,pipeColor));prisonDetail(box(.16,.14,1.05,faceX,.31,z,pipeColor));
+ for(const dz of [-.31,0,.31])prisonDetail(box(.1,1.92,.075,faceX,1.56,z+dz,pipeColor));
+ const padlock=new THREE.Mesh(new THREE.TorusGeometry(.15,.045,8,16,Math.PI),mat(0x927141));padlock.position.set(faceX,1.22,z+.48);padlock.rotation.y=side<0?Math.PI/2:-Math.PI/2;scene.add(prisonDetail(padlock));
+ const label=sign(String(++tubeNumber).padStart(2,'0')+'  /  HOLD',1.22,.23,faceX-side*.13,2.53,z,'#292b28','#988a6d');label.rotation.y=side<0?Math.PI/2:-Math.PI/2;
+ // One tube holds a dark human-shaped outline, visible only when the beam catches it.
+ if(tubeNumber===6){const shadow=new THREE.Group();shadow.position.set(x,0,z);scene.add(prisonDetail(shadow));const dark=new THREE.MeshStandardMaterial({color:0x090b0a,roughness:1});const head=new THREE.Mesh(new THREE.SphereGeometry(.27,16,12),dark);head.position.set(-side*.12,4.92,0);shadow.add(head);const torso=new THREE.Mesh(new THREE.CylinderGeometry(.3,.43,1.45,12),dark);torso.position.set(-side*.12,3.95,0);shadow.add(torso);for(const dz of [-.42,.42]){const arm=new THREE.Mesh(new THREE.CylinderGeometry(.09,.12,1.2,8),dark);arm.position.set(-side*.12,3.96,dz);arm.rotation.x=dz>0?-.28:.28;shadow.add(arm);}for(const dz of [-.19,.19]){const leg=new THREE.Mesh(new THREE.CylinderGeometry(.12,.08,1.1,8),dark);leg.position.set(-side*.12,2.85,dz);shadow.add(leg);}}
+}
+// Dead steam lines and drainage grooves lengthen the perspective without adding light.
+for(const x of [-10.8,-10.35,10.35,10.8]){const pipe=new THREE.Mesh(new THREE.CylinderGeometry(.1,.1,prisonLength,10),mat(pipeColor));pipe.rotation.x=Math.PI/2;pipe.position.set(x,6.88,prisonCenter);scene.add(prisonDetail(pipe));for(const z of [45,61,77,93,105])prisonDetail(box(.34,.34,.34,x,6.88,z,oxide));}
+for(let z=prisonStart+2;z<prisonEnd-1;z+=2.5)prisonDetail(box(2.3,.025,.045,0,.012,z,0x4d4940));
+for(let i=0;i<86;i++){const side=i%2?1:-1,z=prisonStart+2+rustRand()*(prisonLength-4),y=.5+rustRand()*5.8,w=.25+rustRand()*1.1,h=.3+rustRand()*1.4;prisonDetail(box(.025,h,w,side*11.83,y,z,[0x493a31,0x684a36,0x373b36][i%3]));}
+// A single caged sodium fixture burns at the far end. Every other housing is dead.
+box(.75,.14,.7,0,6.96,101,0x262824);box(.16,.56,.16,0,6.61,101,oxide);for(const x of [-.3,.3])box(.035,.45,.035,x,6.25,101,pipeColor);const prisonBulb=sphere(.19,0,6.14,101,0xd69a54);prisonBulb.material.emissive.setHex(0x704317);const prisonLight=new THREE.PointLight(0xffbd72,0,29,2);prisonLight.position.set(0,6.1,101);scene.add(prisonLight);
+sign('INTAKE  /  NO RELEASE',5.4,.38,0,3.15,37.23,'#302c27','#ad7956');
+// The chase spills through the bulkhead into a second, wider specimen lab.
+const labZ=127,labFront=111,labBack=143,labLength=labBack-labFront,labCenter=(labFront+labBack)/2;
+box(24,.2,labLength,0,-.12,labCenter,0x343732);box(.25,7,labLength,-12,3.5,labCenter,rust);box(.25,7,labLength,12,3.5,labCenter,rust);box(24,7,.25,0,3.5,labBack,rust);box(24,.25,labLength,0,7.1,labCenter,0x252825);
+box(8,7,.28,-8,3.5,labFront,rust);box(8,7,.28,8,3.5,labFront,rust);box(8,1.4,.28,0,6.3,labFront,rust);
+const labSign=sign('SPECIMEN LAB  /  B',5,.45,0,2.5,142.82,'#4a4136','#d1b67c');labSign.rotation.y=Math.PI;
 const labTubeParts=[];function labPart(mesh){mesh.userData.noPlayerCollision=true;labTubeParts.push(mesh);return mesh;}
-for(const x of [-7,0,7]){const glass=new THREE.Mesh(new THREE.CylinderGeometry(1.62,1.72,6.4,24,1,true),new THREE.MeshStandardMaterial({color:x===0?0x71817a:0x4a554f,roughness:1,metalness:.18,side:THREE.DoubleSide,transparent:x===0,opacity:x===0?.28:1,depthWrite:x!==0}));glass.position.set(x,3.2,75);scene.add(labPart(glass));for(const y of [.18,1.05,5.4,6.2]){const ring=new THREE.Mesh(new THREE.TorusGeometry(1.68,.11,8,24),mat(oxide));ring.rotation.x=Math.PI/2;ring.position.set(x,y,75);scene.add(labPart(ring));}labPart(cylinder(1.67,.18,x,.08,75,pipeColor));labPart(cylinder(1.58,.18,x,6.34,75,oxide));if(x!==0){const hatch=box(.92,2.35,.08,x,.95,73.34,oxide);labPart(hatch);for(const dx of [-.28,0,.28])labPart(box(.045,1.15,.045,x+dx,1.03,73.28,pipeColor));const lock=new THREE.Mesh(new THREE.TorusGeometry(.11,.035,8,14,Math.PI),mat(0x9a7441));lock.position.set(x+.48,1.49,73.24);scene.add(labPart(lock));}}
-const labTubeHatch=new THREE.Group();labTubeHatch.position.set(-.5,0,73.34);scene.add(labTubeHatch);labPart(box(1,2.2,.12,.5,1.1,0,oxide,labTubeHatch));labPart(box(.16,.42,.16,1.05,1.16,-.08,0x9a7441,labTubeHatch));labTubeHatch.rotation.y=-Math.PI/2;
-const labLight=new THREE.PointLight(0xc89d63,0,18,2);labLight.position.set(-7,6.2,82);scene.add(labLight);const labAlarm=new THREE.PointLight(0x8e3027,0,11,2);labAlarm.position.set(7,2.4,63);scene.add(labAlarm);
+for(const x of [-7,0,7]){const glass=new THREE.Mesh(new THREE.CylinderGeometry(1.72,1.82,6.4,24,1,true),new THREE.MeshStandardMaterial({color:x===0?0x71817a:0x4a554f,roughness:1,metalness:.18,side:THREE.DoubleSide,transparent:x===0,opacity:x===0?.24:1,depthWrite:x!==0}));glass.position.set(x,3.2,labZ);scene.add(labPart(glass));for(const y of [.18,1.05,5.4,6.2]){const ring=new THREE.Mesh(new THREE.TorusGeometry(1.78,.12,8,24),mat(oxide));ring.rotation.x=Math.PI/2;ring.position.set(x,y,labZ);scene.add(labPart(ring));}labPart(cylinder(1.75,.18,x,.08,labZ,pipeColor));labPart(cylinder(1.65,.18,x,6.34,labZ,oxide));if(x!==0){const hatch=box(.92,2.35,.08,x,.95,125.34,oxide);labPart(hatch);for(const dx of [-.28,0,.28])labPart(box(.045,1.15,.045,x+dx,1.03,125.28,pipeColor));const lock=new THREE.Mesh(new THREE.TorusGeometry(.11,.035,8,14,Math.PI),mat(0x9a7441));lock.position.set(x+.48,1.49,125.24);scene.add(labPart(lock));}}
+const labTubeHatch=new THREE.Group();labTubeHatch.position.set(-.5,0,125.34);scene.add(labTubeHatch);labPart(box(1,2.2,.12,.5,1.1,0,oxide,labTubeHatch));labPart(box(.16,.42,.16,1.05,1.16,-.08,0x9a7441,labTubeHatch));labTubeHatch.rotation.y=-Math.PI/2;
+const labLight=new THREE.PointLight(0xc89d63,0,18,2);labLight.position.set(-7,6.2,134);scene.add(labLight);const labAlarm=new THREE.PointLight(0x8e3027,0,11,2);labAlarm.position.set(7,2.4,114);scene.add(labAlarm);
 // Covered walkway: repeated columns and a low ceiling create pockets of occlusion.
 box(3.2,.25,21,-13,3.1,18,0x626e68);for(let z=9;z<=29;z+=4)box(.22,3,.22,-11.6,1.5,z,teal);
 // Playground, with muted remnants of its original colors.
