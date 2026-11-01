@@ -50,6 +50,24 @@ for(let i=0;i<5;i++){const cloud=sphere(.36,-5.5+i*.58,2.7,-6.16,0xf1e9ce);cloud
 for(const z of [-3,1,4]){box(.12,1.7,1.6,7.83,2.65,z,wood);box(.14,1.48,1.38,7.74,2.65,z,0x89aeb0);box(.18,1.5,.06,7.63,2.65,z,cream);box(.18,.06,1.4,7.63,2.65,z,cream);}
 // Verity is now only a yellow sphere with a curved, surface-hugging smile.
 const verity=new THREE.Group();verity.position.set(-.4,1.1,.8);scene.add(verity);sphere(.78,0,0,0,yellow,verity);
+// A much taller, distorted version appears only after the chase begins.
+const chaseMonster=new THREE.Group();chaseMonster.visible=false;scene.add(chaseMonster);
+const monsterHide=new THREE.MeshStandardMaterial({color:0x171917,roughness:1}),monsterSkin=new THREE.MeshStandardMaterial({color:0x8e8260,roughness:.94}),monsterBlack=new THREE.MeshStandardMaterial({color:0x080908,roughness:1}),monsterTooth=new THREE.MeshStandardMaterial({color:0xb8b39c,roughness:1});
+function monsterLimb(parent,x,y,len,r1,r2,material){const pivot=new THREE.Group();pivot.position.set(x,y,0);parent.add(pivot);const limb=new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,len,10),material);limb.position.y=-len/2;limb.castShadow=true;pivot.add(limb);return pivot;}
+const monsterTorso=new THREE.Mesh(new THREE.CylinderGeometry(.42,.67,2.3,14),monsterHide);monsterTorso.position.y=2.75;monsterTorso.castShadow=true;chaseMonster.add(monsterTorso);
+const monsterRib=new THREE.Mesh(new THREE.CylinderGeometry(.49,.38,.88,14),monsterSkin);monsterRib.position.set(0,3.27,.015);monsterRib.castShadow=true;chaseMonster.add(monsterRib);
+const monsterNeck=new THREE.Mesh(new THREE.CylinderGeometry(.2,.3,.58,10),monsterHide);monsterNeck.position.y=4.14;chaseMonster.add(monsterNeck);
+const monsterHead=new THREE.Mesh(new THREE.SphereGeometry(.73,24,18),monsterSkin);monsterHead.scale.set(.85,1.12,.78);monsterHead.position.set(0,4.95,.03);monsterHead.castShadow=true;chaseMonster.add(monsterHead);
+for(const x of [-.27,.27]){const eye=new THREE.Mesh(new THREE.SphereGeometry(.095,12,10),monsterBlack);eye.position.set(x,5.08,.61);chaseMonster.add(eye);const glint=new THREE.Mesh(new THREE.SphereGeometry(.025,8,8),monsterTooth);glint.position.set(x+.02,5.1,.688);chaseMonster.add(glint);}
+const monsterMouth=new THREE.Mesh(new THREE.TorusGeometry(.32,.065,8,20,Math.PI),monsterBlack);monsterMouth.position.set(0,4.63,.59);monsterMouth.rotation.z=Math.PI;chaseMonster.add(monsterMouth);
+for(let i=0;i<5;i++){const tooth=new THREE.Mesh(new THREE.ConeGeometry(.065,.17,5),monsterTooth);tooth.position.set(-.24+i*.12,4.62,.64);tooth.rotation.x=Math.PI;chaseMonster.add(tooth);}
+const monsterArms=[monsterLimb(chaseMonster,-.54,3.65,1.65,.2,.13,monsterSkin),monsterLimb(chaseMonster,.54,3.65,1.65,.2,.13,monsterSkin)];
+const monsterForearms=monsterArms.map((arm,side)=>monsterLimb(arm,0,-1.5,1.45,.13,.085,monsterHide));
+for(let i=0;i<3;i++){const claw=new THREE.Mesh(new THREE.ConeGeometry(.07,.48,6),monsterBlack);claw.position.set(-.14+i*.14,-2.2,.08);claw.rotation.x=Math.PI;monsterArms[0].add(claw);const claw2=claw.clone();claw2.position.x=-.14+i*.14;monsterArms[1].add(claw2);}
+const monsterLegs=[monsterLimb(chaseMonster,-.27,1.75,1.45,.29,.17,monsterHide),monsterLimb(chaseMonster,.27,1.75,1.45,.29,.17,monsterHide)];
+for(const [i,leg] of monsterLegs.entries()){const shin=monsterLimb(leg,0,-1.32,1.15,.16,.095,monsterSkin);const foot=new THREE.Mesh(new THREE.BoxGeometry(.34,.22,.62),monsterBlack);foot.position.set(0,-1.95,.18);leg.add(foot);}
+const monsterBackSpines=[];for(let i=0;i<5;i++){const spine=new THREE.Mesh(new THREE.ConeGeometry(.17,.62,5),monsterHide);spine.position.set(0,2.2+i*.62,-.48);spine.rotation.x=-Math.PI/2;chaseMonster.add(spine);monsterBackSpines.push(spine);}
+chaseMonster.traverse(o=>{if(o.isMesh)o.userData.noPlayerCollision=true;});
 for(const x of [-.25,.25]){const eye=sphere(.068,x,.16,Math.sqrt(.78*.78-x*x-.16*.16)+.004,0x28251f,verity);eye.scale.y=1.45;eye.scale.z=.35;}
 const pts=[];for(let i=0;i<=40;i++){const x=-.35+i*.7/40,y=-.13-.23*(1-(x/.35)**2),z=Math.sqrt(.78*.78-x*x-y*y)+.008;pts.push(new THREE.Vector3(x,y,z));}const smile=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),40,.027,8,false),mat(0x28251f));verity.add(smile);
 // Expand the original room into a connected, roofless facility, without scaling its furniture.
